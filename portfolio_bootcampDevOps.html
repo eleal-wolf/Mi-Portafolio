@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cesar Eliud Leal Sánchez · DevOps Jr</title>
+<style>
+  :root{
+    --bg: #050708;
+    --bg-elevated: #0a0e10;
+    --card: rgba(255,255,255,0.03);
+    --card-solid: #0b0f11;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #e4ecee;
+    --text-muted: #7a8a90;
+    --accent: #0EA5C4;
+    --accent-2: #22D3EE;
+    --accent-soft: rgba(14, 165, 196, 0.12);
+    --accent-glow: rgba(14, 165, 196, 0.35);
+    --radius: 18px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  /* ---------- BACKGROUND ORBS ---------- */
+  .bg-orbs{
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .orb{
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+  }
+  .orb-1{
+    width: 500px; height: 500px;
+    top: -150px; left: -100px;
+    background: radial-gradient(circle, var(--accent), transparent 70%);
+  }
+  .orb-2{
+    width: 420px; height: 420px;
+    top: 40%; right: -160px;
+    background: radial-gradient(circle, var(--accent-2), transparent 70%);
+    opacity: 0.18;
+  }
+  .orb-3{
+    width: 380px; height: 380px;
+    bottom: -120px; left: 30%;
+    background: radial-gradient(circle, var(--accent), transparent 70%);
+    opacity: 0.15;
+  }
+
+  .bg-grid{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 46px 46px;
+    mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 40%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* ---------- SCROLL PROGRESS ---------- */
+  .scroll-progress{
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    z-index: 1000;
+    box-shadow: 0 0 12px var(--accent-glow);
+    transition: width 0.1s ease;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav-wrap{
+    position: sticky;
+    top: 1.2rem;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    padding: 0 1rem;
+    margin-bottom: -1px;
+  }
+
+  nav{
+    width: 100%;
+    max-width: 780px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0.7rem 0.7rem 1.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(10, 14, 16, 0.6);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  .logo{
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logo .dot-ping{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 10px var(--accent-glow);
+    flex-shrink: 0;
+  }
+
+  .nav-links{
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    list-style: none;
+  }
+
+  .nav-links a{
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    transition: color .2s ease, background .2s ease;
+  }
+  .nav-links a:hover{
+    color: var(--text);
+    background: rgba(255,255,255,0.06);
+  }
+
+  .nav-cta{
+    display: none;
+  }
+  @media (min-width: 641px){
+    .nav-cta{
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #041014;
+      background: linear-gradient(120deg, var(--accent-2), var(--accent));
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+    }
+  }
+
+  .menu-toggle{
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .menu-toggle span{
+    width: 20px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+  }
+
+  .nav-links.open{ display: flex; }
+
+  @media (max-width: 640px){
+    nav{ padding: 0.6rem 0.6rem 0.6rem 1.1rem; }
+    .nav-links{
+      position: fixed;
+      top: 5rem;
+      left: 1rem; right: 1rem;
+      background: rgba(10,14,16,0.92);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(16px);
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0.8rem;
+      gap: 0.2rem;
+      display: none;
+    }
+    .nav-links a{ padding: 0.7rem 1rem; }
+    .menu-toggle{ display: flex; }
+  }
+
+  /* ---------- SECTION LABEL ---------- */
+  .eyebrow{
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 1rem;
+  }
+  .eyebrow .line{
+    width: 28px; height: 1px;
+    background: linear-gradient(90deg, var(--accent-2), transparent);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem 5rem;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .hero-content h1{
+    font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.1rem;
+  }
+
+  .hero-content h1 .accent{
+    background: linear-gradient(120deg, var(--accent-2), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-content p.subtitle{
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-buttons{
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+
+  .btn{
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .btn-primary{
+    background: linear-gradient(120deg, var(--accent-2), var(--accent));
+    color: #041014;
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px var(--accent-glow);
+  }
+
+  .btn-outline{
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+  }
+  .btn-outline:hover{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- TERMINAL MOCKUP ---------- */
+  .terminal{
+    background: var(--card-solid);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.02);
+  }
+
+  .terminal-bar{
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .terminal-dot{
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .terminal-dot.red{ background: #ff5f56; }
+  .terminal-dot.yellow{ background: #ffbd2e; }
+  .terminal-dot.green{ background: #27c93f; }
+  .terminal-title{
+    margin-left: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+
+  .terminal-body{
+    padding: 1.3rem 1.2rem;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.82rem;
+    min-height: 210px;
+  }
+
+  .terminal-line{
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    color: #a9c2c8;
+  }
+  .terminal-line .prompt{ color: var(--accent-2); flex-shrink: 0; }
+  .terminal-line .comment{ color: #4a5a5f; }
+  .terminal-line .output{ color: #5eead4; }
+
+  #typed-line::after{
+    content: '▊';
+    margin-left: 2px;
+    color: var(--accent-2);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+
+  /* ---------- SECTIONS ---------- */
+  section{
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem;
+  }
+
+  .section-head{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2.8rem;
+    flex-wrap: wrap;
+  }
+
+  .section-title{
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+
+  .section-index{
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+  }
+
+  /* ---------- GLASS CARD BASE ---------- */
+  .glass{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+
+  /* ---------- SOBRE MÍ ---------- */
+  .about-grid{
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 1.6rem;
+  }
+
+  .about-card{ padding: 2.2rem; }
+
+  .about-card p{
+    color: #a7b6ba;
+    margin-bottom: 1.1rem;
+    font-size: 0.98rem;
+  }
+  .about-card p:last-child{ margin-bottom: 0; }
+  .about-card strong{
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  .quote-box{
+    margin-top: 1.4rem;
+    padding-top: 1.2rem;
+    border-top: 1px dashed var(--border-strong);
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  .stat-list{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat{
+    padding: 1.15rem 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .stat:hover{
+    border-color: var(--border-strong);
+    transform: translateX(4px);
+  }
+
+  .stat-icon{
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    border: 1px solid rgba(14,165,196,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .stat-title{ font-weight: 700; font-size: 0.92rem; }
+  .stat-desc{ color: var(--text-muted); font-size: 0.82rem; }
+
+  /* ---------- SKILLS (bento) ---------- */
+  .skills-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+  }
+
+  .skill-card{
+    padding: 1.6rem 1.1rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card::before{
+    content: "";
+    position: absolute;
+    top: -40%; left: 50%;
+    width: 140%; height: 100%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+
+  .skill-card:hover{
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 14px 34px rgba(14,165,196,0.15);
+  }
+  .skill-card:hover::before{ opacity: 1; }
+
+  .skill-icon{ font-size: 1.8rem; margin-bottom: 0.7rem; position: relative; }
+  .skill-name{ font-weight: 700; font-size: 0.92rem; margin-bottom: 0.3rem; position: relative; }
+  .skill-level{ font-size: 0.72rem; color: var(--text-muted); position: relative; }
+
+  .progress-track{
+    margin-top: 0.8rem;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill{
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 999px;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(.16,1,.3,1);
+  }
+
+  @media (max-width: 900px){
+    .skills-grid{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px){
+    .skills-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---------- PROYECTOS ---------- */
+  .projects-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .project-card{
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .project-card::after{
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .project-card:hover{
+    transform: translateY(-6px);
+    border-color: var(--border-strong);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  }
+  .project-card:hover::after{ opacity: 1; }
+
+  .project-thumb{
+    height: 140px;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 18px 18px;
+    background-color: rgba(255,255,255,0.015);
+    display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .project-thumb .ph-icon{ font-size: 1.7rem; color: #2c3538; }
+
+  .project-body{
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex: 1;
+  }
+
+  .project-status{
+    align-self: flex-start;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    background: var(--accent-soft);
+    border: 1px solid rgba(14,165,196,0.3);
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+  }
+
+  .project-title{ font-weight: 700; font-size: 1.02rem; }
+  .project-desc{ color: var(--text-muted); font-size: 0.88rem; flex: 1; }
+
+  .project-tags{ display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tag{
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+  }
+
+  .project-link{
+    font-size: 0.8rem;
+    color: #566267;
+    cursor: not-allowed;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* ---------- CONTACTO ---------- */
+  .contact-box{
+    padding: 3.2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-box::before{
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: var(--radius);
+    padding: 1px;
+    background: linear-gradient(120deg, var(--accent), transparent 40%, transparent 60%, var(--accent-2));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .contact-box h2{
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    margin-bottom: 0.6rem;
+  }
+  .contact-box p{
+    color: var(--text-muted);
+    margin-bottom: 1.7rem;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top: 1px solid var(--border);
+    padding: 2.4rem 1.5rem;
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  footer a{
+    color: var(--accent-2);
+    font-weight: 600;
+    transition: opacity .2s ease;
+  }
+  footer a:hover{ opacity: 0.75; }
+
+  /* ---------- SCROLL REVEAL ---------- */
+  .reveal{
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal.visible{ opacity: 1; transform: translateY(0); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 880px){
+    .hero{ grid-template-columns: 1fr; padding-top: 3.5rem; }
+    .about-grid{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px){
+    section{ padding: 3.5rem 1.2rem; }
+    footer{ flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="bg-grid"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <div class="nav-wrap">
+    <nav>
+      <div class="logo"><span class="dot-ping"></span> Cesar Leal</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about">Sobre mí</a></li>
+        <li><a href="#experience">Experiencia</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Proyectos</a></li>
+        <li><a href="#contact">Contacto</a></li>
+      </ul>
+      <a href="#contact" class="nav-cta">Hablemos →</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow"><span class="line"></span> Soporte Técnico · 6+ años · DevOps Jr</div>
+      <h1>Hola, soy <span class="accent">Cesar Eliud<br>Leal Sánchez</span></h1>
+      <p class="subtitle">
+        Más de 6 años administrando sistemas, monitoreando infraestructura y dando soporte
+        a bases de datos y aplicaciones. Ahora en transición hacia DevOps: Docker, CI/CD,
+        Kubernetes y Terraform.
+      </p>
+      <div class="hero-buttons">
+        <a href="#projects" class="btn btn-primary">Ver proyectos ↓</a>
+        <a href="#contact" class="btn btn-outline">Contáctame</a>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">cesar@devops-bootcamp: ~</span>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <div class="terminal-line"><span class="comment"># aprendiendo, un comando a la vez</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <section id="about">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="line"></span> Sobre mí</div>
+        <h2 class="section-title">Quién soy</h2>
+      </div>
+      <span class="section-index">01 / 04</span>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card glass reveal">
+        <p>
+          Soy <strong>Cesar Eliud Leal Sánchez</strong>, profesional en soporte técnico con
+          <strong>más de 6 años de experiencia</strong> en administración de sistemas, monitoreo
+          de infraestructura, bases de datos y soporte a aplicaciones, trabajando en entornos
+          <strong>Windows y Linux</strong>.
+        </p>
+        <p>
+          Ahora estoy en un <strong>bootcamp de DevOps</strong> con un objetivo claro:
+          <strong>mejorar como DevOps</strong>, llevar la experiencia que ya tengo en soporte
+          y estabilidad de servicios hacia la automatización, contenedores e infraestructura
+          como código.
+        </p>
+        <div class="quote-box">
+          "No sé todo todavía, pero estoy construyendo la disciplina para llegar ahí."
+        </div>
+      </div>
+
+      <div class="stat-list">
+        <div class="stat glass reveal">
+          <div class="stat-icon">🛠️</div>
+          <div>
+            <div class="stat-title">6+ años en soporte técnico</div>
+            <div class="stat-desc">Monitoreo, incidentes y estabilidad de servicios.</div>
+          </div>
+        </div>
+        <div class="stat glass reveal">
+          <div class="stat-icon">🗄️</div>
+          <div>
+            <div class="stat-title">Bases de datos SQL Server</div>
+            <div class="stat-desc">Stored procedures, consultas y optimización.</div>
+          </div>
+        </div>
+        <div class="stat glass reveal">
+          <div class="stat-icon">🎯</div>
+          <div>
+            <div class="stat-title">Objetivo claro</div>
+            <div class="stat-desc">Evolucionar hacia DevOps e infraestructura.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCIA -->
+  <section id="experience">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="line"></span> Trayectoria</div>
+        <h2 class="section-title">Experiencia laboral</h2>
+      </div>
+      <span class="section-index">02 / 05</span>
+    </div>
+
+    <div class="about-card glass reveal" style="margin-bottom:1.4rem;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap; margin-bottom:1rem;">
+        <div>
+          <div class="project-title" style="font-size:1.1rem;">Ingeniero en Soporte Técnico</div>
+          <div style="color:var(--text-muted); font-size:0.9rem;">Soluciones de Negocios FNX, S.A. de C.V.</div>
+        </div>
+        <span class="project-status">2018 — Presente</span>
+      </div>
+      <p style="color:#a7b6ba; font-size:0.92rem; margin-bottom:0.6rem;">
+        Monitoreo, soporte y automatización de servicios críticos en entornos productivos.
+      </p>
+      <ul style="color:#a7b6ba; font-size:0.9rem; padding-left:1.1rem; display:flex; flex-direction:column; gap:0.4rem;">
+        <li>Monitoreo continuo de servidores y servicios críticos en Windows y Linux.</li>
+        <li>Diagnóstico y resolución de incidentes en aplicaciones y servicios productivos.</li>
+        <li>Creación de consultas SQL y stored procedures para automatización de reportes.</li>
+        <li>Participación en despliegues de aplicaciones y actualizaciones de sistemas.</li>
+        <li>Análisis de logs para identificar fallas y optimizar servicios.</li>
+        <li>Administración de infraestructura tecnológica y activos TI.</li>
+      </ul>
+    </div>
+
+    <div class="about-card glass reveal">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+        <div>
+          <div class="project-title" style="font-size:1.1rem;">Ingeniería en Administración de Sistemas</div>
+          <div style="color:var(--text-muted); font-size:0.9rem;">FIME, UANL</div>
+        </div>
+        <span class="tag">2015 — 2017</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="line"></span> Ya en mi caja de herramientas</div>
+        <h2 class="section-title">Skills que ya tengo</h2>
+      </div>
+      <span class="section-index">03 / 05</span>
+    </div>
+
+    <div class="skills-grid" style="margin-bottom:3rem;">
+      <div class="skill-card glass reveal">
+        <div class="skill-icon">🖥️</div>
+        <div class="skill-name">Windows / Linux</div>
+        <div class="skill-level">Server 2012/2019 · CentOS · Ubuntu</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon">🗄️</div>
+        <div class="skill-name">SQL Server</div>
+        <div class="skill-level">Stored procedures y queries</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon">📈</div>
+        <div class="skill-name">Monitoreo</div>
+        <div class="skill-level">Servidores y servicios críticos</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon">📜</div>
+        <div class="skill-name">Análisis de logs</div>
+        <div class="skill-level">Diagnóstico de incidentes</div>
+      </div>
+      <div class="skill-card glass reveal">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-name">Redes</div>
+        <div class="skill-level">Conexiones, RACK, equipos</div>
+      </div>
+    </div>
+
+    <div class="eyebrow"><span class="line"></span> Roadmap</div>
+    <h2 class="section-title" style="margin-bottom:2.8rem;">Skills que voy a aprender</h2>
+
+    <div class="skills-grid">
+      <div class="skill-card glass reveal" data-level="30">
+        <div class="skill-icon">🐧</div>
+        <div class="skill-name">Linux</div>
+        <div class="skill-level">Fundamentos</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="skill-card glass reveal" data-level="20">
+        <div class="skill-icon">🐳</div>
+        <div class="skill-name">Docker</div>
+        <div class="skill-level">Contenedores</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="skill-card glass reveal" data-level="15">
+        <div class="skill-icon">🔄</div>
+        <div class="skill-name">CI / CD</div>
+        <div class="skill-level">Automatización</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="skill-card glass reveal" data-level="10">
+        <div class="skill-icon">☸️</div>
+        <div class="skill-name">Kubernetes</div>
+        <div class="skill-level">Orquestación</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+      <div class="skill-card glass reveal" data-level="10">
+        <div class="skill-icon">🌍</div>
+        <div class="skill-name">Terraform</div>
+        <div class="skill-level">Infra como código</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section id="projects">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="line"></span> Trabajo</div>
+        <h2 class="section-title">Mis proyectos</h2>
+      </div>
+      <span class="section-index">04 / 05</span>
+    </div>
+
+    <div class="projects-grid">
+      <div class="project-card glass reveal">
+        <div class="project-thumb"><span class="ph-icon">🧩</span></div>
+        <div class="project-body">
+          <span class="project-status">Próximamente</span>
+          <div class="project-title">Proyecto 1</div>
+          <p class="project-desc">Descripción pendiente. Aquí irá mi primer proyecto DevOps del bootcamp.</p>
+          <div class="project-tags"><span class="tag">Linux</span><span class="tag">Docker</span></div>
+          <span class="project-link">Repositorio próximamente →</span>
+        </div>
+      </div>
+
+      <div class="project-card glass reveal">
+        <div class="project-thumb"><span class="ph-icon">🧩</span></div>
+        <div class="project-body">
+          <span class="project-status">Próximamente</span>
+          <div class="project-title">Proyecto 2</div>
+          <p class="project-desc">Descripción pendiente. Un pipeline de CI/CD estará por aquí.</p>
+          <div class="project-tags"><span class="tag">CI/CD</span><span class="tag">GitHub Actions</span></div>
+          <span class="project-link">Repositorio próximamente →</span>
+        </div>
+      </div>
+
+      <div class="project-card glass reveal">
+        <div class="project-thumb"><span class="ph-icon">🧩</span></div>
+        <div class="project-body">
+          <span class="project-status">Próximamente</span>
+          <div class="project-title">Proyecto 3</div>
+          <p class="project-desc">Descripción pendiente. Infraestructura como código con Terraform y K8s.</p>
+          <div class="project-tags"><span class="tag">Terraform</span><span class="tag">Kubernetes</span></div>
+          <span class="project-link">Repositorio próximamente →</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contact">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="line"></span> Contacto</div>
+        <h2 class="section-title">¿Hablamos?</h2>
+      </div>
+      <span class="section-index">05 / 05</span>
+    </div>
+
+    <div class="contact-box glass reveal">
+      <h2>Sigamos en contacto</h2>
+      <p>Estoy abierto a feedback, colaboraciones y consejos de gente con más experiencia en DevOps.</p>
+      <a href="https://github.com/eleal-wolf" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        Ver mi GitHub →
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© <span id="year"></span> Cesar Eliud Leal Sánchez · Apodaca, N.L.</p>
+    <div style="display:flex; gap:1.2rem; flex-wrap:wrap;">
+      <a href="mailto:celiud.leal@gmail.com">celiud.leal@gmail.com</a>
+      <a href="https://github.com/eleal-wolf" target="_blank" rel="noopener noreferrer">github.com/eleal-wolf</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Menú móvil
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(link =>
+      link.addEventListener('click', () => navLinks.classList.remove('open'))
+    );
+
+    // Barra de progreso de scroll
+    const progressBar = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // Barras de progreso de skills
+    const skillCards = document.querySelectorAll('.skill-card');
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fill = entry.target.querySelector('.progress-fill');
+          if (fill) {
+            const level = entry.target.getAttribute('data-level') || 10;
+            requestAnimationFrame(() => { fill.style.width = level + '%'; });
+          }
+          skillObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    skillCards.forEach(el => skillObserver.observe(el));
+
+    // Terminal con efecto de escritura simulando comandos DevOps
+    const commands = [
+      { type: 'cmd', text: 'whoami' },
+      { type: 'out', text: 'cesar-eliud · devops-jr' },
+      { type: 'cmd', text: 'cat objetivo.txt' },
+      { type: 'out', text: 'Mejorar como DevOps 🚀' },
+      { type: 'cmd', text: 'docker ps' },
+      { type: 'out', text: 'aprendiendo contenedores...' },
+      { type: 'cmd', text: 'kubectl get pods' },
+      { type: 'out', text: 'todavía no, pero pronto ☸️' },
+      { type: 'cmd', text: 'terraform apply' },
+      { type: 'out', text: 'construyendo mi futuro, un módulo a la vez' },
+    ];
+
+    const terminalBody = document.getElementById('terminalBody');
+    let lineIndex = 0;
+    let charIndex = 0;
+    let currentLineEl = null;
+
+    function typeNextChar(){
+      if (lineIndex >= commands.length) {
+        // reinicia el ciclo
+        setTimeout(() => {
+          terminalBody.innerHTML = '';
+          lineIndex = 0;
+          charIndex = 0;
+          currentLineEl = null;
+          typeNextChar();
+        }, 2200);
+        return;
+      }
+
+      const item = commands[lineIndex];
+
+      if (charIndex === 0) {
+        currentLineEl = document.createElement('div');
+        currentLineEl.className = 'terminal-line';
+        if (item.type === 'cmd') {
+          currentLineEl.innerHTML = '<span class="prompt">$</span><span id="typed-line"></span>';
+        } else {
+          currentLineEl.innerHTML = '<span class="output" id="typed-line"></span>';
+        }
+        terminalBody.appendChild(currentLineEl);
+      }
+
+      const typedSpan = currentLineEl.querySelector('#typed-line');
+      typedSpan.textContent = item.text.slice(0, charIndex + 1);
+
+      if (charIndex < item.text.length - 1) {
+        charIndex++;
+        setTimeout(typeNextChar, item.type === 'cmd' ? 45 : 18);
+      } else {
+        typedSpan.removeAttribute('id');
+        currentLineEl = null;
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(typeNextChar, item.type === 'cmd' ? 350 : 550);
+      }
+    }
+
+    typeNextChar();
+  </script>
+
+</body>
+</html>
